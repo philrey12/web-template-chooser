@@ -1,0 +1,98 @@
+[
+    {
+        "template_name": "Vacation",
+        "preview_url": "http://sites.becomedistinct.com/preview/61d351216a1342b9bb02e11f5fef2927?templateId=1000772&languageCode=en",
+        "thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cccc678f-20d4-40d1-ac64-93c5e07bd567/siteTemplateIcons/Q0cI9ADiRwyW51bSMFvK_Vacation_BigPreview.png",
+        "desktop_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cccc678f-20d4-40d1-ac64-93c5e07bd567/siteTemplateIcons/AP56WPZ0QsK9AMSgAY4r_vacation_desktop.png",
+        "tablet_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cccc678f-20d4-40d1-ac64-93c5e07bd567/siteTemplateIcons/Nx8VohfASSyp4Izzz5bz_vacation_tablet.png",
+        "mobile_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cccc678f-20d4-40d1-ac64-93c5e07bd567/siteTemplateIcons/tpH71RsXTayjiTXLfqCg_vacation_mobile.png",
+        "template_id": 1000772,
+        "template_properties": {
+            "can_build_from_url": false,
+            "type": "duda",
+            "has_store": false,
+            "has_blog": false,
+            "page_count": 1
+        }
+    },
+    {
+        "template_name": "LifeStyle",
+        "preview_url": "http://sites.becomedistinct.com/preview/lifestyle_template?templateId=1002715&languageCode=en",
+        "thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/549ba1e5-7f93-4507-8eee-7cf6a7824376/siteTemplateIcons/1wqgUoBTnamtu0M1UVwR_Lifestyl_BigPreview.png",
+        "desktop_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/549ba1e5-7f93-4507-8eee-7cf6a7824376/siteTemplateIcons/alKecN3rThKVf6zINI7n_lifestyle_desktop.png",
+        "tablet_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/549ba1e5-7f93-4507-8eee-7cf6a7824376/siteTemplateIcons/1vZcXbEyTXVrNISGV73Y_lifestyle_tablet.png",
+        "mobile_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/549ba1e5-7f93-4507-8eee-7cf6a7824376/siteTemplateIcons/TDkyTx61TsCBuV8N7O37_lifestyle_mobile.png",
+        "template_id": 1002715,
+        "template_properties": {
+            "can_build_from_url": false,
+            "type": "duda",
+            "has_store": false,
+            "has_blog": true,
+            "page_count": 4
+        }
+    },
+    {
+        "template_name": "My Bicycle Blog",
+        "preview_url": "http://sites.becomedistinct.com/preview/23c76aa6?templateId=1002785&languageCode=en",
+        "thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/8dd9912f-55ca-44bb-9522-f6b8f7a35c6b/siteTemplateIcons/VPb5Vu1SniAxas4dF6ZN_Bicycle%20Blog%203%20screens.png",
+        "desktop_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/8dd9912f-55ca-44bb-9522-f6b8f7a35c6b/siteTemplateIcons/fzgEkAoQRkKBTMansMZz_Bicycle%20blog%20Desktop.png",
+        "tablet_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/8dd9912f-55ca-44bb-9522-f6b8f7a35c6b/siteTemplateIcons/kBktYb84Ro6OPvdMiLTA_bicycle%20blog%20Tablet.png",
+        "mobile_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/8dd9912f-55ca-44bb-9522-f6b8f7a35c6b/siteTemplateIcons/p5wR3q5wQem3xpAHTdB2_Bicycle%20blog%20Mobile.png",
+        "template_id": 1002785,
+        "template_properties": {
+            "can_build_from_url": false,
+            "type": "duda",
+            "has_store": false,
+            "has_blog": true,
+            "page_count": 1
+        }
+    },
+    {
+        "template_name": "Product",
+        "preview_url": "http://sites.becomedistinct.com/preview/ce1f372c?templateId=1003040&languageCode=en",
+        "thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cad1e901-aa18-402e-9172-2c7f7c63864b/siteTemplateIcons/pltDu1S0SIi3FJTqulSD_Product_BigPreview.png",
+        "desktop_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cad1e901-aa18-402e-9172-2c7f7c63864b/siteTemplateIcons/HTcxpDXET06cCzxbzSPa_product_desktop.png",
+        "tablet_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cad1e901-aa18-402e-9172-2c7f7c63864b/siteTemplateIcons/H9pF70hmTFfqHJKG1CdM_product_tablet.png",
+        "mobile_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/cad1e901-aa18-402e-9172-2c7f7c63864b/siteTemplateIcons/3YXEQlI7RX5OvHWoOIgB_product_mobile.png",
+        "template_id": 1003040,
+        "template_properties": {
+            "can_build_from_url": false,
+            "type": "duda",
+            "has_store": false,
+            "has_blog": false,
+            "page_count": 1
+        }
+    },
+    {
+        "template_name": "Bakery",
+        "preview_url": "http://sites.becomedistinct.com/preview/2b2d8914?templateId=1003041&languageCode=en",
+        "thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/1730c34d-0458-4f72-90f5-e35bbfedc699/siteTemplateIcons/d1OnMAaaSnaLWrZuqXUX_Bakery_BigPreview.png",
+        "desktop_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/1730c34d-0458-4f72-90f5-e35bbfedc699/siteTemplateIcons/WTeQi3KoS72QQRbFSamJ_bakery_desktop.png",
+        "tablet_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/1730c34d-0458-4f72-90f5-e35bbfedc699/siteTemplateIcons/75WXO2VLQifSfbtihAXQ_bakery_Tablet.png",
+        "mobile_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/1730c34d-0458-4f72-90f5-e35bbfedc699/siteTemplateIcons/fwu21RRAO2wj4fjHaJKQ_bakery_mobile.png",
+        "template_id": 1003041,
+        "template_properties": {
+            "can_build_from_url": false,
+            "type": "duda",
+            "has_store": false,
+            "has_blog": false,
+            "page_count": 1
+        }
+    },
+    {
+        "template_name": "Barber Shop",
+        "preview_url": "http://sites.becomedistinct.com/preview/fad888e0?templateId=1003075&languageCode=en",
+        "thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/dbe02015-05ea-4c06-b80f-217020b31e4a/siteTemplateIcons/BvbhqfI8TTGvihpgcePr_Barber_shop_BigPreview.png",
+        "desktop_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/dbe02015-05ea-4c06-b80f-217020b31e4a/siteTemplateIcons/JP4Wm7oYQqZaijr4a6JD_barber_shop_desktop.png",
+        "tablet_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/dbe02015-05ea-4c06-b80f-217020b31e4a/siteTemplateIcons/iyH0AO4S7MMt22vwuhJA_barber_shop_tablet.png",
+        "mobile_thumbnail_url": "https://irp-cdn.multiscreensite.com/md/dmtmpl/dbe02015-05ea-4c06-b80f-217020b31e4a/siteTemplateIcons/EqCJkAW7RvyuCR8T7hkX_barber_shop_mobile.png",
+        "template_id": 1003075,
+        "template_properties": {
+            "can_build_from_url": false,
+            "type": "duda",
+            "has_store": false,
+            "has_blog": false,
+            "page_count": 1
+        }
+    }
+]
