@@ -30,7 +30,7 @@ app.get('/', async (req, res) => {
 })
 
 app.get('/checkout', async (req, res) => {
-    res.send('Please select a template')
+    res.send('Oops! Please select a template.')
 })
 
 app.post('/checkout', async (req, res) => {
@@ -41,9 +41,10 @@ app.post('/checkout', async (req, res) => {
     let lastNameValue = req.body.lastname
     let domainPrefix = 'diy_' + companyNameValue.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     let siteName = ''
+    let resetPasswordLink = ''
 
-    // CREATE SITE
     async function createSite() {
+        // SITE -----------------------------------------------------------------
         const siteOptions = {
             method: 'POST',
             headers: {
@@ -61,14 +62,10 @@ app.post('/checkout', async (req, res) => {
 
         await fetch(`${API_BASE_URL}/sites/multiscreen/create`, siteOptions)
             .then(res => res.json())
-            .then(data => {
-                siteName = data.site_name
-            })
+            .then(data => siteName = data.site_name)
             .catch(err => console.error(err))
-    }
 
-    // CREATE ACCOUNT
-    async function createAccount() {
+        // ACCOUNT -----------------------------------------------------------------
         const accountOptions = {
             method: 'POST',
             headers: {
@@ -88,16 +85,47 @@ app.post('/checkout', async (req, res) => {
 
         await fetch(`${API_BASE_URL}/accounts/create`, accountOptions)
             .then(res => res.text())
-            .then(data => console.log(data))
             .catch(err => console.error(err))
+
+        // ACCESS -----------------------------------------------------------------
+        const accessOptions = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                Authorization: 'Basic ' + Buffer.from(`${API_USERNAME}:${API_PASSWORD}`, 'binary').toString('base64')
+            },
+            body: JSON.stringify({
+                permissions: ['PUSH_NOTIFICATIONS','REPUBLISH','EDIT','INSITE','PUBLISH','CUSTOM_DOMAIN','RESET','SEO','STATS_TAB','BLOG']
+            })
+        }
+
+        await fetch(`${API_BASE_URL}/accounts/${emailValue}/sites/${siteName}/permissions`, accessOptions)
+            .then(res => res.text())
+            .catch(err => console.error(err))
+
+        // RESET PASSWORD LINK -----------------------------------------------------------------
+        const passwordResetOptions = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Basic ' + Buffer.from(`${API_USERNAME}:${API_PASSWORD}`, 'binary').toString('base64')
+            }
+        }
+
+        await fetch(`${API_BASE_URL}/accounts/reset-password/${emailValue}`, passwordResetOptions)
+            .then(res => res.json())
+            .then(data => resetPasswordLink = data.reset_url)
+            .catch(err => console.error(err))
+
+        // RENDER PAGE -----------------------------------------------------------------
+        res.render('checkout', {
+            dataSiteName: siteName,
+            dataAccountName: emailValue
+        })
     }
 
     createSite()
-    createAccount()
-
-    if (createSite) {
-        res.render('checkout')
-    }
 })
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
