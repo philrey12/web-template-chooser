@@ -41,7 +41,7 @@ app.post('/checkout', async (req, res) => {
     let lastNameValue = req.body.lastname
     let domainPrefix = 'diy_' + companyNameValue.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     let siteName = ''
-    let resetPasswordLink = ''
+    // let resetPasswordLink = ''
 
     async function createSite() {
         // SITE -----------------------------------------------------------------
@@ -87,7 +87,7 @@ app.post('/checkout', async (req, res) => {
             .then(res => res.text())
             .catch(err => console.error(err))
 
-        // ACCESS -----------------------------------------------------------------
+        // FEATURE ACCESS -----------------------------------------------------------------
         const accessOptions = {
             method: 'POST',
             headers: {
@@ -96,7 +96,7 @@ app.post('/checkout', async (req, res) => {
                 Authorization: 'Basic ' + Buffer.from(`${API_USERNAME}:${API_PASSWORD}`, 'binary').toString('base64')
             },
             body: JSON.stringify({
-                permissions: ['PUSH_NOTIFICATIONS','REPUBLISH','EDIT','INSITE','PUBLISH','CUSTOM_DOMAIN','RESET','SEO','STATS_TAB','BLOG']
+                permissions: ['PUSH_NOTIFICATIONS', 'REPUBLISH', 'EDIT', 'INSITE', 'PUBLISH', 'CUSTOM_DOMAIN', 'RESET', 'SEO', 'STATS_TAB', 'BLOG']
             })
         }
 
@@ -105,18 +105,18 @@ app.post('/checkout', async (req, res) => {
             .catch(err => console.error(err))
 
         // RESET PASSWORD LINK -----------------------------------------------------------------
-        const passwordResetOptions = {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                Authorization: 'Basic ' + Buffer.from(`${API_USERNAME}:${API_PASSWORD}`, 'binary').toString('base64')
-            }
-        }
+        // const passwordResetOptions = {
+        //     method: 'POST',
+        //     headers: {
+        //         Accept: 'application/json',
+        //         Authorization: 'Basic ' + Buffer.from(`${API_USERNAME}:${API_PASSWORD}`, 'binary').toString('base64')
+        //     }
+        // }
 
-        await fetch(`${API_BASE_URL}/accounts/reset-password/${emailValue}`, passwordResetOptions)
-            .then(res => res.json())
-            .then(data => resetPasswordLink = data.reset_url)
-            .catch(err => console.error(err))
+        // await fetch(`${API_BASE_URL}/accounts/reset-password/${emailValue}`, passwordResetOptions)
+        //     .then(res => res.json())
+        //     .then(data => resetPasswordLink = data.reset_url)
+        //     .catch(err => console.error(err))
 
         // RENDER PAGE -----------------------------------------------------------------
         res.render('checkout', {
