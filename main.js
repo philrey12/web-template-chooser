@@ -1,10 +1,22 @@
 const express = require('express')
 const app = express()
 const cors = require('cors')
+const rateLimit = require('express-rate-limit')
 const PORT = process.env.PORT || 5000
 const path = require('path')
 const fetch = require('node-fetch')
+const apiCache = require('apicache')
 require('dotenv').config()
+
+// RATE LIMITING
+const limiter = rateLimit({
+    windowMs: 10 * 60 * 1000, // 10 mins
+    max: 15,
+    message: 'You have exceeded the 15 requests in 10 minutes limit! Try again later.',
+    headers: true
+})
+app.use(limiter)
+app.set('trust proxy', 1)
 
 // ENABLE CORS
 app.use(cors())
@@ -23,7 +35,9 @@ const API_PASSWORD = process.env.API_PASSWORD
 
 const jsonData = require('./data/templates.json');
 
-app.get('/', async (req, res) => {
+let cache = apiCache.middleware
+
+app.get('/', cache('2 minutes'), async (req, res) => {
     res.render('home', {
         data: jsonData
     })
@@ -87,7 +101,7 @@ app.post('/checkout', async (req, res) => {
             .then(res => res.text())
             .catch(err => console.error(err))
 
-        // FEATURE ACCESS -----------------------------------------------------------------
+        // ACCESS -----------------------------------------------------------------
         const accessOptions = {
             method: 'POST',
             headers: {
@@ -103,20 +117,6 @@ app.post('/checkout', async (req, res) => {
         await fetch(`${API_BASE_URL}/accounts/${emailValue}/sites/${siteName}/permissions`, accessOptions)
             .then(res => res.text())
             .catch(err => console.error(err))
-
-        // RESET PASSWORD LINK -----------------------------------------------------------------
-        // const passwordResetOptions = {
-        //     method: 'POST',
-        //     headers: {
-        //         Accept: 'application/json',
-        //         Authorization: 'Basic ' + Buffer.from(`${API_USERNAME}:${API_PASSWORD}`, 'binary').toString('base64')
-        //     }
-        // }
-
-        // await fetch(`${API_BASE_URL}/accounts/reset-password/${emailValue}`, passwordResetOptions)
-        //     .then(res => res.json())
-        //     .then(data => resetPasswordLink = data.reset_url)
-        //     .catch(err => console.error(err))
 
         // RENDER PAGE -----------------------------------------------------------------
         res.render('checkout', {
