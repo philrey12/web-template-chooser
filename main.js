@@ -11,8 +11,8 @@ require('dotenv').config()
 // RATE LIMITING
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 mins
-    max: 15,
-    message: 'You have exceeded the 15 requests in 10 minutes limit! Try again later.',
+    max: 25,
+    message: 'You have exceeded the 25 requests in 10 minutes limit! Please try again later.',
     headers: true
 })
 app.use(limiter)
@@ -32,6 +32,7 @@ app.set('views', path.join(__dirname, 'views'))
 const API_BASE_URL = process.env.API_BASE_URL
 const API_USERNAME = process.env.API_USERNAME
 const API_PASSWORD = process.env.API_PASSWORD
+const SUBSCRIPTION_URL = process.env.SUBSCRIPTION_URL
 
 const jsonData = require('./data/templates.json');
 
@@ -44,7 +45,7 @@ app.get('/', cache('2 minutes'), async (req, res) => {
 })
 
 app.get('/checkout', async (req, res) => {
-    res.send('Oops! Please select a template.')
+    res.send('Oops, you must select a template first.')
 })
 
 app.post('/checkout', async (req, res) => {
@@ -119,10 +120,13 @@ app.post('/checkout', async (req, res) => {
             .catch(err => console.error(err))
 
         // RENDER PAGE -----------------------------------------------------------------
-        res.render('checkout', {
-            dataSiteName: siteName,
-            dataAccountName: emailValue
-        })
+        // res.render('checkout', {
+        //     dataSiteName: siteName,
+        //     dataAccountName: emailValue
+        // })
+
+        // REDIRECT PAGE -----------------------------------------------------------------
+        res.redirect(`${SUBSCRIPTION_URL}`)
     }
 
     createSite()
