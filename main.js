@@ -11,7 +11,7 @@ require('dotenv').config()
 // RATE LIMITING
 const limiter = rateLimit({
     windowMs: 10 * 60 * 1000, // 10 mins
-    max: 25,
+    max: 100,
     message: 'You have exceeded the 25 requests in 10 minutes limit! Please try again later.',
     headers: true
 })
