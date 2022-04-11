@@ -5,6 +5,7 @@ const rateLimit = require('express-rate-limit')
 const PORT = process.env.PORT || 5000
 const path = require('path')
 const fetch = require('node-fetch')
+const fs = require('fs')
 const apiCache = require('apicache')
 require('dotenv').config()
 
@@ -33,8 +34,13 @@ const API_BASE_URL = process.env.API_BASE_URL
 const API_USERNAME = process.env.API_USERNAME
 const API_PASSWORD = process.env.API_PASSWORD
 const SUBSCRIPTION_URL = process.env.SUBSCRIPTION_URL
+const ZOHO_REFRESH_TOKEN = process.env.ZOHO_REFRESH_TOKEN
+const ZOHO_CLIENT_ID = process.env.ZOHO_CLIENT_ID
+const ZOHO_CLIENT_SECRET = process.env.ZOHO_CLIENT_SECRET
+const ZOHO_TOKEN_BASE_URL = process.env.ZOHO_TOKEN_BASE_URL
 
 const jsonData = require('./data/templates.json');
+const jsonToken = require('./token.json');
 
 let cache = apiCache.middleware
 
@@ -56,10 +62,12 @@ app.post('/checkout', async (req, res) => {
     let lastNameValue = req.body.lastname
     let domainPrefix = 'diy_' + companyNameValue.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     let siteName = ''
-    // let resetPasswordLink = ''
+    let accessToken = ''
 
-    async function createSite() {
-        // SITE -----------------------------------------------------------------
+    async function createSiteAndAccount() {
+        // CREATE NEW SITE -----------------------------------------------------------------
+        console.log('Duda: Creating new website...')
+
         const siteOptions = {
             method: 'POST',
             headers: {
@@ -80,7 +88,9 @@ app.post('/checkout', async (req, res) => {
             .then(data => siteName = data.site_name)
             .catch(err => console.error(err))
 
-        // ACCOUNT -----------------------------------------------------------------
+        // CREATE NEW ACCOUNT -----------------------------------------------------------------
+        console.log('Duda: Creating new account...')
+
         const accountOptions = {
             method: 'POST',
             headers: {
@@ -102,7 +112,9 @@ app.post('/checkout', async (req, res) => {
             .then(res => res.text())
             .catch(err => console.error(err))
 
-        // ACCESS -----------------------------------------------------------------
+        // GRANT ACCESS -----------------------------------------------------------------
+        console.log('Duda: Granting access to new user...')
+
         const accessOptions = {
             method: 'POST',
             headers: {
@@ -126,10 +138,121 @@ app.post('/checkout', async (req, res) => {
         // })
 
         // REDIRECT PAGE -----------------------------------------------------------------
+        console.log('Redirecting to Checkout page...')
+
         res.redirect(`${SUBSCRIPTION_URL}`)
     }
 
-    createSite()
+    async function refreshToken() {
+        // CREATE NEW ACCESS TOKEN -----------------------------------------------------------------
+        console.log('ZCRM: Creating new access token...')
+
+        const refreshTokenOptions = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                refresh_token: `${ZOHO_REFRESH_TOKEN}`,
+                client_id: `${ZOHO_CLIENT_ID}`,
+                client_secret: `${ZOHO_CLIENT_SECRET}`,
+                grant_type: 'refresh_token'
+            }).toString()
+        }
+
+        await fetch(`${ZOHO_TOKEN_BASE_URL}`, refreshTokenOptions)
+            .then(res => res.json())
+            .then(data => {
+                accessToken = data.access_token
+            })
+            .catch(err => console.error(err))
+
+        let token = { 
+            key: accessToken 
+        }
+        let data = JSON.stringify(token, null, 2)
+
+        fs.writeFileSync('token.json', data)
+
+        checkToken()
+    }
+
+    async function addUserToCRMLead() {
+        // ADD NEW LEAD -----------------------------------------------------------------
+        let tagName = 'DIY Website Builder'
+        let params = {
+            "data": [
+                {
+                    "Company": `${companyNameValue}`,
+                    "Email": `${emailValue}`,
+                    "First_Name": `${firstNameValue}`,
+                    "Last_Name": `${lastNameValue}`,
+                    "Tag": [
+                        {
+                            "name": `${tagName}`
+                        }
+                    ]
+                }
+            ],
+            "trigger": [
+                "approval",
+                "workflow",
+                "blueprint"
+            ]
+        }
+
+        const addLeadOptions = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Zoho-oauthtoken ' + accessToken
+            },
+            body: JSON.stringify(params)
+        }
+
+        await fetch(`https://www.zohoapis.com/crm/v2/leads/upsert`, addLeadOptions)
+            .then(res => res.json())
+            .then(data => {
+                if (data.status === 'error') {
+                    console.log('Invalid access token.')
+                    refreshToken()
+                } else {
+                    createSiteAndAccount()
+                }
+            })
+            .catch(err => console.error(err))
+    }
+
+    async function checkToken() {
+        // CHECK ACCESS TOKEN -----------------------------------------------------------------
+        console.log('ZCRM: Checking...')
+
+        accessToken = jsonToken.key
+
+        const checkTokenOptions = {
+            method: 'GET',
+            headers: {
+                Accept: 'application/json',
+                Authorization: 'Zoho-oauthtoken ' + accessToken
+            }
+        }
+
+        await fetch('https://www.zohoapis.com/crm/v2/leads', checkTokenOptions)
+            .then(res => res.text())
+            .then(data => {
+                if (data.status === 'error') {
+                    console.log('Invalid access token.')
+                    refreshToken()
+                } else {
+                    console.log('Valid access token.')
+                    addUserToCRMLead()
+                }
+            })
+            .catch(err => console.error(err))
+    }
+
+    checkToken()
 })
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
