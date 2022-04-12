@@ -145,6 +145,8 @@ app.post('/checkout', async (req, res) => {
 
     async function addUserToCRMLead() {
         // ADD NEW LEAD -----------------------------------------------------------------
+        console.log('ZCRM: Adding new user to CRM Leads...')
+
         let tagName = 'DIY Website Builder'
         let params = {
             "data": [
