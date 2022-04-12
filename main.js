@@ -143,41 +143,6 @@ app.post('/checkout', async (req, res) => {
         res.redirect(`${SUBSCRIPTION_URL}`)
     }
 
-    async function refreshToken() {
-        // CREATE NEW ACCESS TOKEN -----------------------------------------------------------------
-        console.log('ZCRM: Creating new access token...')
-
-        const refreshTokenOptions = {
-            method: 'POST',
-            headers: {
-                Accept: 'application/json',
-                'Content-Type': 'application/x-www-form-urlencoded'
-            },
-            body: new URLSearchParams({
-                refresh_token: `${ZOHO_REFRESH_TOKEN}`,
-                client_id: `${ZOHO_CLIENT_ID}`,
-                client_secret: `${ZOHO_CLIENT_SECRET}`,
-                grant_type: 'refresh_token'
-            }).toString()
-        }
-
-        await fetch(`${ZOHO_TOKEN_BASE_URL}`, refreshTokenOptions)
-            .then(res => res.json())
-            .then(data => {
-                accessToken = data.access_token
-            })
-            .catch(err => console.error(err))
-
-        let token = { 
-            key: accessToken 
-        }
-        let data = JSON.stringify(token, null, 2)
-
-        fs.writeFileSync('token.json', data)
-
-        checkToken()
-    }
-
     async function addUserToCRMLead() {
         // ADD NEW LEAD -----------------------------------------------------------------
         let tagName = 'DIY Website Builder'
@@ -222,6 +187,46 @@ app.post('/checkout', async (req, res) => {
                 }
             })
             .catch(err => console.error(err))
+    }
+
+    async function refreshToken() {
+        // CREATE NEW ACCESS TOKEN -----------------------------------------------------------------
+        console.log('ZCRM: Creating new access token...')
+
+        const refreshTokenOptions = {
+            method: 'POST',
+            headers: {
+                Accept: 'application/json',
+                'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: new URLSearchParams({
+                refresh_token: `${ZOHO_REFRESH_TOKEN}`,
+                client_id: `${ZOHO_CLIENT_ID}`,
+                client_secret: `${ZOHO_CLIENT_SECRET}`,
+                grant_type: 'refresh_token'
+            }).toString()
+        }
+
+        await fetch(`${ZOHO_TOKEN_BASE_URL}`, refreshTokenOptions)
+            .then(res => res.json())
+            .then(data => {
+                accessToken = data.access_token
+            })
+            .catch(err => console.error(err))
+
+        try {
+            let token = { 
+                key: accessToken 
+            }
+            let data = JSON.stringify(token, null, 2)
+    
+            fs.writeFileSync('token.json', data)
+
+            checkToken()
+        } catch (error) {
+            console.error(error)
+            res.send(error)
+        }
     }
 
     async function checkToken() {
