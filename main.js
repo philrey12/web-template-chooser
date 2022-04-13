@@ -39,6 +39,10 @@ const ZOHO_REFRESH_TOKEN = process.env.ZOHO_REFRESH_TOKEN
 const ZOHO_CLIENT_ID = process.env.ZOHO_CLIENT_ID
 const ZOHO_CLIENT_SECRET = process.env.ZOHO_CLIENT_SECRET
 const ZOHO_TOKEN_BASE_URL = process.env.ZOHO_TOKEN_BASE_URL
+const REDIS_BASE_URL = process.env.REDIS_BASE_URL
+const REDIS_PORT = process.env.REDIS_PORT
+const REDIS_USERNAME = process.env.REDIS_USERNAME
+const REDIS_PASSWORD = process.env.REDIS_PASSWORD
 
 const jsonData = require('./data/templates.json');
 
@@ -49,7 +53,7 @@ let accessToken = ''
 app.get('/', cache('2 minutes'), async (req, res) => {
     // GET TOKEN VALUE AND LOAD WEB TEMPLATES
     const client = redis.createClient({
-        url: 'redis://philrey:Fortysix2!@redis-17070.c252.ap-southeast-1-1.ec2.cloud.redislabs.com:17070'
+        url: `redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@${REDIS_BASE_URL}:${REDIS_PORT}`
     })
     
     client.on('error', (err) => console.log('Redis Client Error', err))
@@ -208,7 +212,7 @@ app.post('/checkout', async (req, res) => {
 
     async function saveToken(tempToken) {
         const client = redis.createClient({
-            url: 'redis://philrey:Fortysix2!@redis-17070.c252.ap-southeast-1-1.ec2.cloud.redislabs.com:17070'
+            url: `redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@${REDIS_BASE_URL}:${REDIS_PORT}`
         })
       
         client.on('error', (err) => console.log('Redis Client Error', err))
