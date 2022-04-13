@@ -7,6 +7,7 @@ const path = require('path')
 const fetch = require('node-fetch')
 const fs = require('fs')
 const apiCache = require('apicache')
+const redis = require('redis')
 require('dotenv').config()
 
 // RATE LIMITING
@@ -40,11 +41,26 @@ const ZOHO_CLIENT_SECRET = process.env.ZOHO_CLIENT_SECRET
 const ZOHO_TOKEN_BASE_URL = process.env.ZOHO_TOKEN_BASE_URL
 
 const jsonData = require('./data/templates.json');
-const jsonToken = require('./token.json');
 
 let cache = apiCache.middleware
 
+let accessToken = ''
+
 app.get('/', cache('2 minutes'), async (req, res) => {
+    // GET TOKEN VALUE AND LOAD WEB TEMPLATES
+    const client = redis.createClient({
+        url: 'redis://philrey:Fortysix2!@redis-17070.c252.ap-southeast-1-1.ec2.cloud.redislabs.com:17070'
+    })
+    
+    client.on('error', (err) => console.log('Redis Client Error', err))
+    
+    await client.connect()
+    
+    const tokenValue = await client.get('key')
+
+    accessToken = tokenValue
+    console.log(`Access token: ${accessToken}`)
+
     res.render('home', {
         data: jsonData
     })
@@ -62,7 +78,6 @@ app.post('/checkout', async (req, res) => {
     let lastNameValue = req.body.lastname
     let domainPrefix = 'diy_' + companyNameValue.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     let siteName = ''
-    let accessToken = ''
 
     async function createSiteAndAccount() {
         // CREATE NEW SITE -----------------------------------------------------------------
@@ -181,7 +196,7 @@ app.post('/checkout', async (req, res) => {
         await fetch(`https://www.zohoapis.com/crm/v2/leads/upsert`, addLeadOptions)
             .then(res => res.json())
             .then(data => {
-                if (data.status === 'error') {
+                if (data.status == 'error') {
                     console.log('Invalid access token.')
                     refreshToken()
                 } else {
@@ -189,6 +204,22 @@ app.post('/checkout', async (req, res) => {
                 }
             })
             .catch(err => console.error(err))
+    }
+
+    async function saveToken(tempToken) {
+        const client = redis.createClient({
+            url: 'redis://philrey:Fortysix2!@redis-17070.c252.ap-southeast-1-1.ec2.cloud.redislabs.com:17070'
+        })
+      
+        client.on('error', (err) => console.log('Redis Client Error', err))
+      
+        await client.connect()
+      
+        await client.set('key', `${tempToken}`)
+        const tokenValue = await client.get('key')
+
+        accessToken = tokenValue
+        console.log('Access token saved.')
     }
 
     async function refreshToken() {
@@ -216,26 +247,13 @@ app.post('/checkout', async (req, res) => {
             })
             .catch(err => console.error(err))
 
-        try {
-            let token = { 
-                key: accessToken 
-            }
-            let data = JSON.stringify(token, null, 2)
-    
-            fs.writeFileSync('token.json', data)
-
-            checkToken()
-        } catch (error) {
-            console.error(error)
-            res.send(error)
-        }
+        saveToken(accessToken)
+        checkToken()
     }
 
     async function checkToken() {
         // CHECK ACCESS TOKEN -----------------------------------------------------------------
         console.log('ZCRM: Checking...')
-
-        accessToken = jsonToken.key
 
         const checkTokenOptions = {
             method: 'GET',
@@ -246,9 +264,9 @@ app.post('/checkout', async (req, res) => {
         }
 
         await fetch('https://www.zohoapis.com/crm/v2/leads', checkTokenOptions)
-            .then(res => res.text())
+            .then(res => res.json())
             .then(data => {
-                if (data.status === 'error') {
+                if (data.status == 'error') {
                     console.log('Invalid access token.')
                     refreshToken()
                 } else {
@@ -260,6 +278,7 @@ app.post('/checkout', async (req, res) => {
     }
 
     checkToken()
+    // createSiteAndAccount()
 })
 
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
