@@ -5,7 +5,6 @@ const rateLimit = require('express-rate-limit')
 const PORT = process.env.PORT || 5000
 const path = require('path')
 const fetch = require('node-fetch')
-const fs = require('fs')
 const apiCache = require('apicache')
 const redis = require('redis')
 require('dotenv').config()
