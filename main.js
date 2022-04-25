@@ -43,7 +43,7 @@ const REDIS_PORT = process.env.REDIS_PORT
 const REDIS_USERNAME = process.env.REDIS_USERNAME
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD
 
-const jsonData = require('./data/templates.json');
+const jsonData = require('./data/templates.json')
 
 let cache = apiCache.middleware
 
@@ -82,8 +82,9 @@ app.post('/checkout', async (req, res) => {
     let domainPrefix = 'diy_' + companyNameValue.replace(/[^a-zA-Z0-9]/g, '').toLowerCase();
     let siteName = ''
 
+    // CREATE NEW SITE AND ACCOUNT -----------------------------------------------------------------
     async function createSiteAndAccount() {
-        // CREATE NEW SITE -----------------------------------------------------------------
+        // SITE
         console.log('Duda: Creating new website...')
 
         const siteOptions = {
@@ -106,7 +107,7 @@ app.post('/checkout', async (req, res) => {
             .then(data => siteName = data.site_name)
             .catch(err => console.error(err))
 
-        // CREATE NEW ACCOUNT -----------------------------------------------------------------
+        // ACCOUNT
         console.log('Duda: Creating new account...')
 
         const accountOptions = {
@@ -130,7 +131,7 @@ app.post('/checkout', async (req, res) => {
             .then(res => res.text())
             .catch(err => console.error(err))
 
-        // GRANT ACCESS -----------------------------------------------------------------
+        // GRANT ACCESS
         console.log('Duda: Granting access to new user...')
 
         const accessOptions = {
@@ -161,8 +162,8 @@ app.post('/checkout', async (req, res) => {
         res.redirect(`${SUBSCRIPTION_URL}`)
     }
 
+    // ADD NEW LEAD -----------------------------------------------------------------
     async function addUserToCRMLead() {
-        // ADD NEW LEAD -----------------------------------------------------------------
         console.log('ZCRM: Adding new user to CRM Leads...')
 
         let tagName = 'DIY Website Builder'
@@ -209,6 +210,7 @@ app.post('/checkout', async (req, res) => {
             .catch(err => console.error(err))
     }
 
+    // SAVE NEW ACCESS TOKEN -----------------------------------------------------------------
     async function saveToken(tempToken) {
         const client = redis.createClient({
             url: `redis://${REDIS_USERNAME}:${REDIS_PASSWORD}@${REDIS_BASE_URL}:${REDIS_PORT}`
@@ -225,8 +227,8 @@ app.post('/checkout', async (req, res) => {
         console.log('Access token saved.')
     }
 
+    // CREATE NEW ACCESS TOKEN -----------------------------------------------------------------
     async function refreshToken() {
-        // CREATE NEW ACCESS TOKEN -----------------------------------------------------------------
         console.log('ZCRM: Creating new access token...')
 
         const refreshTokenOptions = {
@@ -254,8 +256,8 @@ app.post('/checkout', async (req, res) => {
         checkToken()
     }
 
+    // CHECK ACCESS TOKEN -----------------------------------------------------------------
     async function checkToken() {
-        // CHECK ACCESS TOKEN -----------------------------------------------------------------
         console.log('ZCRM: Checking...')
 
         const checkTokenOptions = {
