@@ -42,6 +42,7 @@ const REDIS_BASE_URL = process.env.REDIS_BASE_URL
 const REDIS_PORT = process.env.REDIS_PORT
 const REDIS_USERNAME = process.env.REDIS_USERNAME
 const REDIS_PASSWORD = process.env.REDIS_PASSWORD
+const LEAD_OWNER_EMAIL = process.env.LEAD_OWNER_EMAIL
 
 const jsonData = require('./data/templates.json')
 
@@ -170,6 +171,9 @@ app.post('/checkout', async (req, res) => {
         let params = {
             "data": [
                 {
+                    "Owner": {
+                        "email": `${LEAD_OWNER_EMAIL}`
+                    },
                     "Company": `${companyNameValue}`,
                     "Email": `${emailValue}`,
                     "First_Name": `${firstNameValue}`,
