@@ -208,6 +208,7 @@ app.post('/checkout', async (req, res) => {
                     console.log('Invalid access token.')
                     refreshToken()
                 } else {
+                    console.log(data)
                     createSiteAndAccount()
                 }
             })
